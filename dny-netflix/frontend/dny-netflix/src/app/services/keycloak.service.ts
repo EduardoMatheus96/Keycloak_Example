@@ -8,11 +8,22 @@ export class KeycloakOperationService {
   isLoggedIn(): boolean {
     return this.keycloak.isLoggedIn();
   }
+
   logout(): void {
     this.keycloak.logout();
   }
-  getUserProfile(): any {
+
+  getUserProfile(): Promise<any> {
     return this.keycloak.loadUserProfile();
   }
-  // Add other methods as needed for token access, user info retrieval, etc.}
+
+  getToken(): Promise<string> {
+    return this.keycloak.getToken();
+  }
+
+  hasRealmRole(role: string): boolean {
+    return this.keycloak.isUserInRole(role);
+  }
+
+  // Outros métodos personalizados
 }

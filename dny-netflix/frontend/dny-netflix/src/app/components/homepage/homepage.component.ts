@@ -5,6 +5,7 @@ import { Movie } from '../../models/movie';
 import { KeycloakOperationService } from '../../services/keycloak.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-homepage',
@@ -15,14 +16,17 @@ import { FormsModule } from '@angular/forms';
 })
 export class HomepageComponent implements OnInit {
   movies: Movie[] = [];
+  filteredMovies: Movie[] = [];
   searchText: string = '';
   userProfile: any | null = null;
   isTooltipVisible = false;
+  hasMovieCreatorRole: boolean = false;
 
   constructor(
     private movieService: MovieService,
     private keyCloakService: KeycloakOperationService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {}
   ngOnInit(): void {
     this.getAllMovies();
@@ -30,6 +34,8 @@ export class HomepageComponent implements OnInit {
       this.userProfile = data;
       console.table(this.userProfile);
     });
+    this.hasMovieCreatorRole =
+      this.keyCloakService.hasRealmRole('movie_creator');
   }
   logout() {
     this.keyCloakService.logout();
@@ -38,6 +44,7 @@ export class HomepageComponent implements OnInit {
     this.movieService.getAllMovies().subscribe(
       (movies: Movie[]) => {
         this.movies = movies;
+        this.filteredMovies = movies;
       },
       (error: any) => {
         this.handleError(error.error);
@@ -67,7 +74,28 @@ export class HomepageComponent implements OnInit {
   private displayError(message: string) {
     this.snackBar.open(message, 'Close', { duration: 5000 });
   }
-  public onSearchChange(event: any) {
-    this.searchText = event.target.value;
+  onSearchChange(event: any) {
+    this.searchText = event.target.value.toLowerCase();
+    this.filteredMovies = this.movies.filter(movie => 
+      movie.title.toLowerCase().includes(this.searchText)
+    );
+  }
+
+  private filterMovies() {
+    this.filteredMovies = this.movies.filter((movie) =>
+      movie.title.toLowerCase().includes(this.searchText)
+    );
+  }
+  onCreateMovieClick() {
+    console.log('Botão Create Movie clicado');
+
+    this.router.navigate(['/create-movie']);
+  }
+  getGenres(genre: string | string[]): string {
+    if (Array.isArray(genre)) {
+      return genre.join(', ');
+    } else {
+      return genre;
+    }
   }
 }

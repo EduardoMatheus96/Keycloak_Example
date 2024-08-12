@@ -1,0 +1,39 @@
+<!-- <form (ngSubmit)="createMovie()">
+  <mat-form-field>
+    <input matInput placeholder="Título do filme" [(ngModel)]="movie.title" required>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Gênero" [(ngModel)]="movie.genre" required>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit">Criar Filme</button>
+</form> -->
+
+<form (ngSubmit)="createMovie()" #movieForm="ngForm">
+  <mat-form-field appearance="fill">
+    <mat-label>Título do Filme</mat-label>
+    <input matInput placeholder="Título do filme" [(ngModel)]="movie.title" name="title" required>
+    <mat-error *ngIf="movieForm.submitted && !movie.title">O título do filme é obrigatório.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Gênero</mat-label>
+    <input matInput placeholder="Gênero (separados por vírgula)" [(ngModel)]="movie.genre" name="genre">
+    <mat-error *ngIf="movieForm.submitted && (!movie.genre || !movie.genre.length)">Adicione pelo menos um gênero.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Ano de Lançamento</mat-label>
+    <input matInput type="number" placeholder="Ano de lançamento" [(ngModel)]="movie.releaseYear" name="releaseYear" required>
+    <mat-error *ngIf="movieForm.submitted && !movie.releaseYear">O ano de lançamento é obrigatório.</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>URL da Imagem</mat-label>
+    <input matInput placeholder="URL da imagem" [(ngModel)]="movie.imageUrl" name="imageUrl" required>
+    <mat-error *ngIf="movieForm.submitted && !movie.imageUrl">A URL da imagem é obrigatória.</mat-error>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit">Criar Filme</button>
+</form>

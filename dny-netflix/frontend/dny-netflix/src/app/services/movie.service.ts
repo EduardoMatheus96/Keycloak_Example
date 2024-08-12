@@ -16,4 +16,7 @@ export class MovieService {
   getMovieById(id: number): Observable<Movie> {
     return this.http.get<Movie>(`${this.backendUrl}/getMovieByID/${id}`);
   }
+  createMovie(movie: Movie): Observable<Movie> {
+    return this.http.post<Movie>(`${this.backendUrl}/createMovie`, movie);
+  }
 }
